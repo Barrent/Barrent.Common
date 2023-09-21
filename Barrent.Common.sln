@@ -3,24 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barrent.Common", "Barrent.Common\Barrent.Common.csproj", "{29145693-149B-4736-989C-FEAF27AC166A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barrent.Common", "Barrent.Common\Barrent.Common.csproj", "{29145693-149B-4736-989C-FEAF27AC166A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barrent.Common.WPF", "Barrent.Common.WPF\Barrent.Common.WPF.csproj", "{59297D92-AFED-48B8-863D-99DD55F16985}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Barrent.Common.WPF", "Barrent.Common.WPF\Barrent.Common.WPF.csproj", "{59297D92-AFED-48B8-863D-99DD55F16985}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{29145693-149B-4736-989C-FEAF27AC166A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{29145693-149B-4736-989C-FEAF27AC166A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29145693-149B-4736-989C-FEAF27AC166A}.Debug|x64.ActiveCfg = Debug|x64
+		{29145693-149B-4736-989C-FEAF27AC166A}.Debug|x64.Build.0 = Debug|x64
 		{29145693-149B-4736-989C-FEAF27AC166A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29145693-149B-4736-989C-FEAF27AC166A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29145693-149B-4736-989C-FEAF27AC166A}.Release|x64.ActiveCfg = Release|x64
+		{29145693-149B-4736-989C-FEAF27AC166A}.Release|x64.Build.0 = Release|x64
 		{59297D92-AFED-48B8-863D-99DD55F16985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59297D92-AFED-48B8-863D-99DD55F16985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59297D92-AFED-48B8-863D-99DD55F16985}.Debug|x64.ActiveCfg = Debug|x64
+		{59297D92-AFED-48B8-863D-99DD55F16985}.Debug|x64.Build.0 = Debug|x64
 		{59297D92-AFED-48B8-863D-99DD55F16985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59297D92-AFED-48B8-863D-99DD55F16985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59297D92-AFED-48B8-863D-99DD55F16985}.Release|x64.ActiveCfg = Release|x64
+		{59297D92-AFED-48B8-863D-99DD55F16985}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

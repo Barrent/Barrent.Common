@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d" 
+                    xmlns:views="clr-namespace:Barrent.Common.WPF.Views"
+                    xmlns:viewModels="clr-namespace:Barrent.Common.WPF.ViewModels"
+                    xmlns:interfaces="clr-namespace:Barrent.Common.WPF.Interfaces.ViewModels"
+                    xmlns:parameters="clr-namespace:Barrent.Common.WPF.ViewModels.Parameters">
+
+    <Style TargetType="TextBox" x:Key="ValidatableTextBoxStyle">
+        <d:Style.DataContext>
+            <x:Type Type="interfaces:IParameterViewModel"/>
+        </d:Style.DataContext>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <AdornedElementPlaceholder/>
+                        <Border BorderBrush="Red" BorderThickness="1"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                <Setter Property="ToolTipService.InitialShowDelay" Value="100"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate DataType="{x:Type parameters:FolderPathParameterViewModel}" x:Key="FolderPathParameterDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="Name" Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+            <TextBox Grid.Column="2" Text="{Binding Value, UpdateSourceTrigger=LostFocus}" Style="{StaticResource ValidatableTextBoxStyle}"/>
+            <Button Grid.Column="4" Content="..." Command="{Binding BrowseFolderCommand}"/>
+        </Grid>
+    </DataTemplate>
+
+    <views:ParameterTemplateSelector x:Key="ParameterTemplateSelector"
+                                     FolderPathTemplate="{StaticResource FolderPathParameterDataTemplate}"/>
+    
+</ResourceDictionary>
