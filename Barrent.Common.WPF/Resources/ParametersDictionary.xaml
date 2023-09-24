@@ -4,13 +4,22 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     mc:Ignorable="d" 
                     xmlns:views="clr-namespace:Barrent.Common.WPF.Views"
-                    xmlns:viewModels="clr-namespace:Barrent.Common.WPF.ViewModels"
-                    xmlns:interfaces="clr-namespace:Barrent.Common.WPF.Interfaces.ViewModels"
-                    xmlns:parameters="clr-namespace:Barrent.Common.WPF.ViewModels.Parameters">
+                    xmlns:parameters="clr-namespace:Barrent.Common.WPF.Interfaces.ViewModels.Parameters"
+                    xmlns:converters="clr-namespace:Barrent.Common.WPF.Converters">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="TextBoxDictionary.xaml"/>
+        <ResourceDictionary>
+            <converters:BoolToStyleConverter x:Key="BoolToTextBoxStyleConverter" 
+                                             TrueStyle="{StaticResource ReadOnlyTextBoxStyle}" 
+                                             FalseStyle="{StaticResource DefaultTextBoxStyle}"
+                                             DefaultStyle="{StaticResource DefaultTextBoxStyle}"/>
+        </ResourceDictionary>
+
+    </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="TextBox" x:Key="ValidatableTextBoxStyle">
         <d:Style.DataContext>
-            <x:Type Type="interfaces:IParameterViewModel"/>
+            <x:Type Type="parameters:IParameterViewModel"/>
         </d:Style.DataContext>
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
@@ -32,7 +41,7 @@
         </Style.Triggers>
     </Style>
 
-    <DataTemplate DataType="{x:Type parameters:FolderPathParameterViewModel}" x:Key="FolderPathParameterDataTemplate">
+    <DataTemplate DataType="{x:Type parameters:IFolderPathParameterViewModel}" x:Key="FolderPathParameterDataTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition SharedSizeGroup="Name" Width="Auto"/>
@@ -41,13 +50,49 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+            <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={}{0}:}"/>
             <TextBox Grid.Column="2" Text="{Binding Value, UpdateSourceTrigger=LostFocus}" Style="{StaticResource ValidatableTextBoxStyle}"/>
-            <Button Grid.Column="4" Content="..." Command="{Binding BrowseFolderCommand}"/>
+            <Button Grid.Column="4" Content="..." Width="20" Command="{Binding BrowseFolderCommand}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type parameters:IFolderPathParameterViewModel}" x:Key="MultilineFolderPathParameterDataTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="10"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="Name" Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name, StringFormat={}{0}:}"/>
+            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Value, UpdateSourceTrigger=LostFocus}" Style="{StaticResource ValidatableTextBoxStyle}"/>
+            <Button Grid.Row="2" Grid.Column="4" Content="..." Width="20" Command="{Binding BrowseFolderCommand}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type parameters:IParameterViewModel`1}" x:Key="DefaultParameterDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="Name" Width="Auto"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={}{0}:}"/>
+            <TextBox Grid.Column="2" 
+                     Style="{Binding IsReadOnly, Converter={StaticResource BoolToTextBoxStyleConverter}, Mode=OneWay}"
+                     Text="{Binding Value, UpdateSourceTrigger=LostFocus}"
+                     />
         </Grid>
     </DataTemplate>
 
     <views:ParameterTemplateSelector x:Key="ParameterTemplateSelector"
-                                     FolderPathTemplate="{StaticResource FolderPathParameterDataTemplate}"/>
-    
+                                     DefaultTemplate="{StaticResource DefaultParameterDataTemplate}"
+                                     FolderPathTemplate="{StaticResource FolderPathParameterDataTemplate}"
+                                     />
 </ResourceDictionary>

@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using Barrent.Common.WPF.Interfaces.Services;
+using Barrent.Common.WPF.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Barrent.Common.WPF.ViewModels;
@@ -8,7 +10,7 @@ public class DialogService : IDialogService
 {
     private readonly Window _mainWindow;
 
-    public DialogService(Window mainWindow)
+    public DialogService([FromKeyedServices(ServiceKey.Main)] Window mainWindow)
     {
         _mainWindow = mainWindow;
     }

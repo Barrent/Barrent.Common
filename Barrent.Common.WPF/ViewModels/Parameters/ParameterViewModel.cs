@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Windows.Data;
 using Barrent.Common.WPF.Events;
 using Barrent.Common.WPF.Interfaces.Models;
-using Barrent.Common.WPF.Interfaces.ViewModels;
+using Barrent.Common.WPF.Interfaces.ViewModels.Parameters;
 
 namespace Barrent.Common.WPF.ViewModels.Parameters;
 
@@ -22,6 +23,7 @@ public class ParameterViewModel<T> : ValidatableViewModelBase<ParameterViewModel
 
     public bool IsReadOnly { get; }
     public string? Name => Parameter.Name;
+
     public T Value
     {
         get => Parameter.Value;

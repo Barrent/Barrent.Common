@@ -1,16 +1,15 @@
 ﻿using System.IO;
-using System.Reflection.Metadata;
 using System.Windows.Input;
 using Barrent.Common.WPF.Events;
 using Barrent.Common.WPF.Interfaces.Models;
 using Barrent.Common.WPF.Interfaces.Services;
-using Barrent.Common.WPF.Models;
+using Barrent.Common.WPF.Interfaces.ViewModels.Parameters;
 using Barrent.Common.WPF.Resources;
 using Prism.Commands;
 
 namespace Barrent.Common.WPF.ViewModels.Parameters;
 
-public class FolderPathParameterViewModel : ParameterViewModel<string>
+public class FolderPathParameterViewModel : ParameterViewModel<string>, IFolderPathParameterViewModel
 {
     private readonly IDialogService _dialogService;
 
