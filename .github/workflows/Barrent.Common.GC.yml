@@ -4,12 +4,10 @@
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 # https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm
 
-name: Build & Test
+name: Gated Check-in
 
 on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
