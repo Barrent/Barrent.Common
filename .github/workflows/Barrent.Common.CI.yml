@@ -10,7 +10,7 @@ on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
 
 env:
-  NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
   PACKAGE_OUTPUT: ${{github.workspace}}\output 
 
 jobs:
@@ -65,7 +65,11 @@ jobs:
       if: 'env.commitsSinceVersionSource != 0' 
       run: dotnet pack --no-build --configuration Release -p:PackageVersion=${{ env.majorMinorPatch }} --output ${{env.PACKAGE_OUTPUT}}
 
+    - name: 'Add source'
+      if: 'env.commitsSinceVersionSource != 0' 
+      run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Barrent/index.json"
+  
     - name: 'Publish'
       if: 'env.commitsSinceVersionSource != 0' 
-      run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg
+      run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg --api-key ${{ env.NUGET_AUTH_TOKEN }} --source "github"
 
