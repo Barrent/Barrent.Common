@@ -1,0 +1,58 @@
+# For more information on GitHub Actions, refer to https://github.com/features/actions
+# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
+# refer to https://github.com/microsoft/github-actions-for-desktop-apps
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm
+
+name: Publish
+
+on:
+  workflow_dispatch: # Allow running the workflow manually from the GitHub UI
+
+env:
+  NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  PACKAGE_OUTPUT: ${{github.workspace}}\output 
+
+jobs:
+
+  deploy:
+    name: 'Deploy'
+
+    runs-on: windows-latest
+
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 'Git Version'
+      id: version
+      uses: codacy/git-version@2.8.0    
+      with:
+          prefix: v
+      
+    - name: 'Check the version'
+      run: echo ${{ steps.version.outputs.version }}
+
+    # - name: 'Setup .NET'
+    #   uses: actions/setup-dotnet@v4
+
+    # - name: 'Restore packages'
+    #   run: dotnet restore
+
+    # - name: 'Add tag'
+    #   uses: TriPSs/conventional-changelog-action@v5
+    #   with:
+    #     github-token: ${{ secrets.github_token }}
+    #     skip-commit: "true"
+
+    # - name: 'Build'
+    #   run: dotnet build --no-restore --configuration Release
+
+    # - name: 'Pack'
+    #   run: dotnet pack --no-build --configuration Release --output ${{env.PACKAGE_OUTPUT}}
+
+    # - name: 'Publish'
+    #   run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg
+

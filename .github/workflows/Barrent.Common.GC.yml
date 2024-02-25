@@ -37,7 +37,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build
-      run: dotnet build
+      run: dotnet build --no-restore
 
     - name: Run tests
       run: dotnet test --logger trx --results-directory "TestResults"
