@@ -16,7 +16,7 @@ env:
 jobs:
 
   deploy:
-    name: 'Deploy'
+    name: 'Publish'
 
     runs-on: windows-latest
 
@@ -38,6 +38,12 @@ jobs:
     - name: 'Display GitVersion'
       run: |
           echo "MajorMinorPatch: ${{ env.majorMinorPatch }}"
+
+    - name: 'Add tag'
+      if: 'env.commitsSinceVersionSource != 0' 
+      run: |
+        git tag v${{ env.majorMinorPatch }}
+        git push origin v${{ env.majorMinorPatch }}
 
     # - name: 'Setup .NET'
     #   uses: actions/setup-dotnet@v4
