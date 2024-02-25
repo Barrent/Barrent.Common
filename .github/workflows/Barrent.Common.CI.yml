@@ -10,7 +10,7 @@ on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
 
 env:
-  NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
   PACKAGE_OUTPUT: ${{github.workspace}}\output 
 
 jobs:
@@ -71,5 +71,5 @@ jobs:
   
     - name: 'Publish'
       if: 'env.commitsSinceVersionSource != 0' 
-      run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+      run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg --api-key ${{ env.NUGET_AUTH_TOKEN }} --source "github"
 
