@@ -41,15 +41,23 @@ jobs:
     - name: 'Display GitVersion'
       run: |
           echo "MajorMinorPatch: ${{ env.majorMinorPatch }}"
+          echo "CommitsSinceVersionSource: ${{ env.commitsSinceVersionSource }}"
+
+    - name: 'Early exit'
+      if: 'env.commitsSinceVersionSource == 0' 
+      run: |
+        gh run cancel ${{ github.run_id }}
+        gh run watch ${{ github.run_id }}
+      env:
+        GH_TOKEN: ${{ github.token }}
 
     - name: 'Add tag'
-      if: 'env.commitsSinceVersionSource != 0' 
       run: |
         git tag v${{ env.majorMinorPatch }}
         git push origin v${{ env.majorMinorPatch }}
 
     # - name: 'Setup .NET'
-    #   uses: actions/setup-dotnet@v4
+    #   uses: actions/setup-dotnet@v4      
 
     # - name: 'Restore packages'
     #   run: dotnet restore
