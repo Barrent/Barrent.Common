@@ -4,7 +4,7 @@
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 # https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm
 
-name: Publish
+name: Release Nuget Package
 
 on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
@@ -50,16 +50,20 @@ jobs:
         git push origin v${{ env.majorMinorPatch }}
 
     - name: 'Setup .NET'
+      if: 'env.commitsSinceVersionSource != 0' 
       uses: actions/setup-dotnet@v4      
 
     - name: 'Restore packages'
+      if: 'env.commitsSinceVersionSource != 0' 
       run: dotnet restore
 
-    # - name: 'Build'
-    #   run: dotnet build --no-restore --configuration Release -p:Version=1.0.0.5 -p:FileVersion=1.0.0.5 -p:AssemblyVersion=1.0.0.5
+    - name: 'Build'
+      if: 'env.commitsSinceVersionSource != 0' 
+      run: dotnet build --no-restore --configuration Release -p:Version=${{ env.majorMinorPatch }} -p:FileVersion=${{ env.majorMinorPatch }} -p:AssemblyVersion=${{ env.majorMinorPatch }}
 
-    # - name: 'Pack'
-    #   run: dotnet pack --no-build --configuration Release --output ${{env.PACKAGE_OUTPUT}}
+    - name: 'Pack'
+      if: 'env.commitsSinceVersionSource != 0' 
+      run: dotnet pack --no-build --configuration Release --output ${{env.PACKAGE_OUTPUT}}
 
     # - name: 'Publish'
     #   run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg
