@@ -48,7 +48,7 @@ jobs:
     #     skip-commit: "true"
 
     # - name: 'Build'
-    #   run: dotnet build --no-restore --configuration Release
+    #   run: dotnet build --no-restore --configuration Release -p:Version=1.0.0.5 -p:FileVersion=1.0.0.5 -p:AssemblyVersion=1.0.0.5
 
     # - name: 'Pack'
     #   run: dotnet pack --no-build --configuration Release --output ${{env.PACKAGE_OUTPUT}}
