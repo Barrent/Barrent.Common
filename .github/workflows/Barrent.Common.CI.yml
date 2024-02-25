@@ -71,5 +71,5 @@ jobs:
   
     - name: 'Publish'
       if: 'env.commitsSinceVersionSource != 0' 
-      run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg
+      run: dotnet nuget push ${{env.PACKAGE_OUTPUT}}\*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
 
