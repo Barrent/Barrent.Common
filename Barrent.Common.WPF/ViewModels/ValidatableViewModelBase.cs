@@ -30,17 +30,17 @@ public abstract class ValidatableViewModelBase<T> : ViewModelBase, INotifyDataEr
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidatableViewModelBase{T}"/> class.
     /// </summary>
-    /// <param name="errors">Validation rules.</param>
-    protected ValidatableViewModelBase(ErrorCollection<T> errors)
+    /// <param name="errorCriteria">Validation rules.</param>
+    protected ValidatableViewModelBase(ErrorCriterionCollection<T> errorCriteria)
     {
-        Errors = errors;
+        ErrorCriteria = errorCriteria;
         _detectedErrors = new Dictionary<string, List<string>>();
     }
 
     /// <summary>
     /// Event raised when a property is changed.
     /// </summary>
-    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
     /// <summary>
     /// Indicates if there are any validation errors.
@@ -58,16 +58,16 @@ public abstract class ValidatableViewModelBase<T> : ViewModelBase, INotifyDataEr
     /// <summary>
     /// Validation rules
     /// </summary>
-    protected ErrorCollection<T> Errors { get; }
+    protected ErrorCriterionCollection<T> ErrorCriteria { get; }
 
     /// <summary>
-    /// Applies all rules to this instance.
+    /// Applies all the validation rules to this instance.
     /// </summary>
-    public void ApplyRules()
+    public void CheckForErrors()
     {
-        foreach (var propertyName in Errors.Select(x => x.PropertyName).Distinct())
+        foreach (var propertyName in ErrorCriteria.Select(x => x.PropertyName).Distinct())
         {
-            ApplyRules(this, propertyName);
+            CheckForErrors(this, propertyName);
         }
     }
 
@@ -76,7 +76,7 @@ public abstract class ValidatableViewModelBase<T> : ViewModelBase, INotifyDataEr
     /// </summary>
     /// <param name="propertyName">The property name.</param>
     /// <returns>Error collection.</returns>
-    public IEnumerable GetErrors(string propertyName)
+    public IEnumerable GetErrors(string? propertyName)
     {
         return GetPropertyErrors(propertyName);
     }
@@ -86,7 +86,7 @@ public abstract class ValidatableViewModelBase<T> : ViewModelBase, INotifyDataEr
     /// </summary>
     /// <param name="propertyName">The property name.</param>
     /// <returns>Error collection.</returns>
-    public IReadOnlyList<string> GetPropertyErrors(string propertyName)
+    public IReadOnlyList<string> GetPropertyErrors(string? propertyName)
     {
         IReadOnlyList<string> result;
         if (string.IsNullOrEmpty(propertyName))
@@ -113,9 +113,9 @@ public abstract class ValidatableViewModelBase<T> : ViewModelBase, INotifyDataEr
     /// </summary>
     /// <param name="target">Target of validation</param>
     /// <param name="propertyName">Name of the property.</param>
-    protected virtual void ApplyRules(object target, string propertyName)
+    protected virtual void CheckForErrors(object target, string propertyName)
     {
-        var propertyErrors = Errors.Detect((T)target, propertyName).ToList();
+        var propertyErrors = ErrorCriteria.CheckForError((T)target, propertyName).ToList();
 
         if (propertyErrors.Count > 0)
         {
@@ -168,11 +168,11 @@ public abstract class ValidatableViewModelBase<T> : ViewModelBase, INotifyDataEr
     {
         if (string.IsNullOrEmpty(args.PropertyName))
         {
-            ApplyRules();
+            CheckForErrors();
         }
         else
         {
-            ApplyRules(this, args.PropertyName);
+            CheckForErrors(this, args.PropertyName);
         }
 
         base.OnPropertyChanged(args);

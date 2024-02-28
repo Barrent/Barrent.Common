@@ -3,18 +3,28 @@ using System.ComponentModel;
 
 namespace Barrent.Common.WPF.Interfaces.Services;
 
+/// <summary>
+/// Allows to control window state.
+/// </summary>
 public interface IWindowController
 {
-    event CancelEventHandler WindowClosing;
-    event EventHandler WindowClosed;
+    /// <summary>
+    /// Raised when window is closed.
+    /// </summary>
+    event EventHandler? WindowClosed;
 
     /// <summary>
-    /// Shows the window.
+    /// Raised when window is about to be closed.
     /// </summary>
-    void Show();
+    event CancelEventHandler? WindowClosing;
 
     /// <summary>
     /// Closes the window.
     /// </summary>
     void Close();
+
+    /// <summary>
+    /// Shows the window.
+    /// </summary>
+    void Show();
 }
