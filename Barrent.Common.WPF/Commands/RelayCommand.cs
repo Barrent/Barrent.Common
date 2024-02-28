@@ -4,52 +4,77 @@ using System.Windows.Input;
 
 namespace Barrent.Common.WPF.Commands;
 
-public class RelayCommand<T> : ICommand, IDisposable
+/// <summary>
+/// Implements <see cref="ICommand"/>.
+/// Redirects subscribers to <see cref="CommandManager.RequerySuggested"/> so state of bound button is updated whenever user interacts with UI.
+/// </summary>
+/// <typeparam name="T">Type of command parameter.</typeparam>
+/// <param name="execute">Action to execute.</param>
+/// <param name="canExecute">Func to check if execution is possible.</param>
+public class RelayCommand<T>(Action<T?> execute, Predicate<T?>? canExecute = null) : ICommand, IDisposable
 {
-    private readonly Predicate<T>? _canExecute;
+    /// <summary>
+    /// Subscribers.
+    /// </summary>
+    private readonly List<EventHandler> _canExecuteSubscribers = new();
 
-    private readonly List<EventHandler> _canExecuteSubscribers;
-
-    private readonly Action<T> _execute;
+    /// <summary>
+    /// Indicates if object is already disposed.
+    /// </summary>
     private bool _isDisposed;
-
-    public RelayCommand(Action<T> execute, Predicate<T>? canExecute = null)
-    {
-        _canExecuteSubscribers = new List<EventHandler>();
-        _execute = execute;
-        _canExecute = canExecute;
-    }
 
     /// <summary>
     /// Occurs when changes occur that affect whether or not the command should execute.
     /// </summary>
-    public event EventHandler CanExecuteChanged
+    public event EventHandler? CanExecuteChanged
     {
         add
         {
+            if (value == null)
+            {
+                return;
+            }
+
             CommandManager.RequerySuggested += value;
             _canExecuteSubscribers.Add(value);
         }
         remove
         {
+            if (value == null)
+            {
+                return;
+            }
+
             CommandManager.RequerySuggested -= value;
             _canExecuteSubscribers.Remove(value);
         }
     }
 
-    public bool CanExecute(T parameter)
+    /// <summary>
+    /// Defines the method that determines whether the command can execute in its current state.
+    /// </summary>
+    /// <param name="parameter"> Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+    /// <returns> <see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
+
+    public bool CanExecute(T? parameter)
     {
-        if (_canExecute == null)
+        if (canExecute == null)
         {
             return true;
         }
 
-        return _canExecute(parameter);
+        return canExecute(parameter);
     }
 
-    public bool CanExecute(object parameter)
+    /// <summary>
+    /// Defines the method that determines whether the command can execute in its current state.
+    /// </summary>
+    /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+    /// <returns> <see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
+
+    public bool CanExecute(object? parameter)
     {
-        return CanExecute((T)parameter);
+        return CanExecute((T?)parameter);
     }
 
     /// <summary>
@@ -62,14 +87,20 @@ public class RelayCommand<T> : ICommand, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public void Execute(T parameter)
+    /// <summary>Defines the method to be called when the command is invoked.</summary>
+    /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+
+    public void Execute(T? parameter)
     {
-        _execute(parameter);
+        execute(parameter);
     }
 
-    public void Execute(object parameter)
+    /// <summary>Defines the method to be called when the command is invoked.</summary>
+    /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+
+    public void Execute(object? parameter)
     {
-        Execute((T)parameter);
+        Execute((T?)parameter);
     }
 
     /// <summary>
@@ -95,10 +126,18 @@ public class RelayCommand<T> : ICommand, IDisposable
     }
 }
 
+/// <summary>
+/// Variant of a command that doesn't care about parameter type.
+/// </summary>
 public class RelayCommand : RelayCommand<object>
 {
-
-    public RelayCommand(Action<object> execute, Predicate<object>? canExecute = null) : base(execute, canExecute)
+    /// <summary>
+    /// Initializes a new instance of <see cref="RelayCommand"/>.
+    /// </summary>
+    /// <param name="execute">Action to execute.</param>
+    /// <param name="canExecute">Func to check if execution is possible.</param>
+    public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute = null) 
+        : base(execute, canExecute)
     {
     }
 }

@@ -36,8 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Converters\" />
     <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Barrent.Common\Barrent.Common.csproj" />
   </ItemGroup>
 
 </Project>
