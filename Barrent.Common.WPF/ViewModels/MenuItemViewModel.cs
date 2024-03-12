@@ -1,25 +1,26 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Barrent.Common.WPF.Interfaces.ViewModels;
 
-namespace Barrent.Common.WPF.Interfaces.ViewModels;
+namespace Barrent.Common.WPF.ViewModels;
 
 /// <summary>
-/// View model of a menu item.
+/// Viewmodel of menu item.
 /// </summary>
-public interface IMenuItemViewModel
+public class MenuItemViewModel : IMenuItemViewModel
 {
     /// <summary>
     /// Command of menu item. Executed if there are no child items.
     /// </summary>
-    ICommand? Command { get; }
+    public ICommand? Command { get; set; }
 
     /// <summary>
     /// Menu item text.
     /// </summary>
-    string? Header { get; }
+    public string? Header { get; set; }
 
     /// <summary>
     /// Child menu items.
     /// </summary>
-    ObservableCollection<IMenuItemViewModel>? Items { get; }
+    public ObservableCollection<IMenuItemViewModel>? Items { get; set; }
 }
